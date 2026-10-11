@@ -11,3 +11,8 @@ class PaymentStatus(str, Enum):
     pending = "pending"
     succeeded = "succeeded"
     failed = "failed"
+
+
+class OutboxStatus(str, Enum):
+    pending = "pending"
+    published = "published"

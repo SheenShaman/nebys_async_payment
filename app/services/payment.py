@@ -1,8 +1,10 @@
 from sqlalchemy import select
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.models.payment import Payment
+from app.models.outbox import OutboxEvent
 from app.schemas.payment import PaymentCreate
-from app.utils.enums import PaymentStatus
+from app.utils.enums import PaymentStatus, OutboxStatus
 
 
 async def get_payment(session: AsyncSession, payment_id: int):
@@ -29,6 +31,23 @@ async def create_payment(session: AsyncSession, data: PaymentCreate, idempotency
     session.add(payment)
     await session.flush()
 
-    # Outbox pattern
+    session.add(
+        OutboxEvent(
+            topic="payments.new",
+            payload={"payment_id": str(payment.id)},
+            status=OutboxStatus.pending,
+        )
+    )
+    try:
+        await session.commit()
+    except IntegrityError:
+        await session.rollback()
+        existing = await session.scalar(
+            select(OutboxEvent).where(Payment.idempotency_key == idempotency_key)
+        )
+        if existing:
+            return existing, False
+        raise
 
+    await session.refresh(payment)
     return payment, True
