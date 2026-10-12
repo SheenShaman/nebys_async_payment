@@ -2,7 +2,7 @@ from datetime import datetime
 from decimal import Decimal
 from uuid import UUID
 
-from pydantic import ConfigDict, AnyHttpUrl, BaseModel, Field
+from pydantic import AnyHttpUrl, BaseModel, ConfigDict, Field
 
 from app.utils.enums import Currency, PaymentStatus
 
@@ -10,7 +10,7 @@ from app.utils.enums import Currency, PaymentStatus
 class PaymentResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
-    payment_id: UUID
+    id: UUID
     amount: Decimal
     currency: Currency
     description: str
@@ -26,11 +26,11 @@ class PaymentCreate(BaseModel):
     amount: Decimal = Field(gt=0, decimal_places=2)
     currency: Currency
     description: str = Field(min_length=1, max_length=5000)
-    metadata: dict = Field(default_factory=dict)
+    meta_data: dict = Field(default_factory=dict)
     webhook_url: AnyHttpUrl
 
 
 class PaymentAccepted(BaseModel):
-    payment_id: UUID
+    id: UUID
     status: PaymentStatus
     created_at: datetime

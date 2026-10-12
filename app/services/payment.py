@@ -1,10 +1,11 @@
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.models.payment import Payment
+
 from app.models.outbox import OutboxEvent
+from app.models.payment import Payment
 from app.schemas.payment import PaymentCreate
-from app.utils.enums import PaymentStatus, OutboxStatus
+from app.utils.enums import OutboxStatus, PaymentStatus
 
 
 async def get_payment(session: AsyncSession, payment_id: int):
@@ -24,7 +25,7 @@ async def create_payment(session: AsyncSession, data: PaymentCreate, idempotency
         currency=data.currency,
         description=data.description,
         meta_data=data.meta_data,
-        status=PaymentStatus,
+        status=PaymentStatus.pending,
         idempotency_key=idempotency_key,
         webhook_url=str(data.webhook_url),
     )

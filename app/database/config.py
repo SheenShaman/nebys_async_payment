@@ -4,7 +4,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Settings(BaseSettings):
     DB_URL: str = "postgresql+asyncpg://payments:payments@postgres:5432/payments"
     RABBITMQ_URL: str = "amqp://guest:guest@rabbitmq:5672/"
-    API_KEY: str = "secret_key"
+    API_KEY: str = "dev-secret-api-key"
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 

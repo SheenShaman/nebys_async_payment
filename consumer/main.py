@@ -1,6 +1,6 @@
 import asyncio
-import random
 import json
+import random
 from datetime import datetime, timezone
 from uuid import UUID
 
@@ -14,10 +14,10 @@ from faststream.rabbit import (
 )
 from sqlalchemy import select
 
+from app.database.config import get_settings
+from app.database.session import SessionLocal
 from app.models.payment import Payment
 from app.utils.enums import PaymentStatus
-from app.database.session import SessionLocal
-from app.database.config import get_settings
 
 settings = get_settings()
 broker = RabbitBroker(settings.RABBITMQ_URL)
