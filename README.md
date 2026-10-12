@@ -33,7 +33,6 @@ Outbox-событие.
 ## Запуск
 
 ```bash
-cp .env .env
 docker compose up --build
 ```
 
@@ -53,7 +52,7 @@ curl -X POST http://localhost:8000/api/v1/payments \
     "amount": 1999.99,
     "currency": "RUB",
     "description": "Order #123",
-    "metadata": {"order_id": "123"},
+    "meta_data": {"order_id": "123"},
     "webhook_url": "https://example.com/webhook"
   }'
 ```
