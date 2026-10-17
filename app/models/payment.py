@@ -12,6 +12,7 @@ from app.utils.enums import Currency, PaymentStatus
 
 class Payment(Base):
     __tablename__ = "payment"
+    __table_args__ = (Index("ix_payments_idempotency_key", "idempotency_key", unique=True),)
 
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     amount: Mapped[Decimal] = mapped_column(Numeric(18, 2), nullable=False)

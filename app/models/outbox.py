@@ -11,6 +11,7 @@ from app.utils.enums import OutboxStatus
 
 class OutboxEvent(Base):
     __tablename__ = "outbox"
+    __table_args__ = (Index("ix_outbox_pending", "status", "created_at"),)
 
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     topic: Mapped[str] = mapped_column(String, nullable=False)
